@@ -12,7 +12,7 @@ wn.setup(width=800, height=600)
 wn.tracer(1)
 
 # Setting up the snake
-snake = [[0, 0]]
+snake = [[0, 0], [-1, 0]]
 
 
 #Draw the Snake
@@ -21,9 +21,10 @@ def draw_Snake(snake):
         part = turtle.Turtle()
         part.speed(0)
         part.shape('square')
-        part.color('white')
+        part.color('black')
         part.penup()
         part.setpos(i[0] * 20, i[1] * 20)
+        part.color('white')
 
 
 def erase_Snake(snake):
