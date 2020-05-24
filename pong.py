@@ -35,8 +35,8 @@ ball.shape("circle")
 ball.color("white")
 ball.penup()
 ball.setpos(0, 0)
-ball.xvel = .5
-ball.yvel = .5
+ball.xvel = random.randrange(-10, 10)*.075
+ball.yvel = random.randrange(-10, 10)*.075
 
 #titles
 pen = turtle.Turtle()
