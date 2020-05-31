@@ -1,13 +1,17 @@
 import requests
 import json
 import os
+import sys
+
+event_key = sys.argv[1]
+api_key = sys.argv[2]
 
 
 full_matchlist =[]
 
 #Blue Alliance API v3 Call
-parameters = {"accept": "application/json", "X-TBA-Auth-Key": ""}
-match_api = requests.get("https://www.thebluealliance.com/api/v3/event/2020txdri/matches/simple",params=parameters)
+parameters = {"accept": "application/json", "X-TBA-Auth-Key": api_key}
+match_api = requests.get("https://www.thebluealliance.com/api/v3/event/"+event_key+"/matches/simple",params=parameters)
 json_data = match_api.json()
 
 #creating a new file
@@ -15,12 +19,6 @@ username = os.getlogin()
 f = open(f'C:\\Users\\{username}\\Desktop\\schedule.txt',"w")
 
 #making a sorted list
-red1 = []
-red2 = []
-red3 = []
-blue1 = []
-blue2 = []
-blue3 = []
 qual_matches=[]
 
 for i in json_data:
