@@ -1,7 +1,15 @@
 import os
+
+try:
+  import pandas as pd
+except ImportError:
+  print ("Trying to Install required modules: pandas")
+  os.system('python -m pip install pandas')
+
 import csv
 import pandas as pd
-import json
+import json 
+import sys
 
 
 try:

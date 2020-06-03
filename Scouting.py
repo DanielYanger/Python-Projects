@@ -1,7 +1,15 @@
-import requests
+
 import json
 import os
 import sys
+
+try:
+  import requests
+except ImportError:
+  print ("Trying to Install required modules: requests")
+  os.system('python -m pip install requests')
+
+import requests
 
 event_key = sys.argv[1]
 api_key = sys.argv[2]
