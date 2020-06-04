@@ -14,8 +14,6 @@ from os import listdir
 from os.path import isfile, join
 
 onlyfiles = [f for f in listdir(r'D:/Downloads/testing/') if isfile(join(r'D:/Downloads/testing/', f))]
-print(onlyfiles)
-
 try:
   with open(r"C:\Users\Daniel_Yang\Desktop\Test.csv") as f:
     full_data = pd.read_csv(filepath_or_buffer=f)
