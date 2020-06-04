@@ -10,26 +10,34 @@ import csv
 import pandas as pd
 import json 
 import sys
+from os import listdir
+from os.path import isfile, join
 
+onlyfiles = [f for f in listdir(r'D:/Downloads/testing/') if isfile(join(r'D:/Downloads/testing/', f))]
+print(onlyfiles)
 
 try:
   with open(r"C:\Users\Daniel_Yang\Desktop\Test.csv") as f:
     full_data = pd.read_csv(filepath_or_buffer=f)
-  with open(r"D:\Downloads\Match 4_ 2789.json") as f:
-    data = json.load(f)
-    data['Match Number']=(f.name[f.name.index('Match ')+6])
-    data['Team Number']=(f.name[f.name.index('_ ')+2:f.name.index('.json')])
+  for i in onlyfiles:
+    with open(join(r'D:/Downloads/testing/', i)) as f:
+      data = json.load(f)
+      data['Match Number']=(f.name[f.name.index('Match ')+6])
+      data['Team Number']=(f.name[f.name.index('_ ')+2:f.name.index('.json')])
   
-  full_data = full_data.append(data,ignore_index=True)
-  full_data.to_csv(r"C:\Users\Daniel_Yang\Desktop\Test.csv", index=False)
+      full_data = full_data.append(data,ignore_index=True)
 
 except FileNotFoundError:
-  with open(r"D:\Downloads\Match 4_ 2789.json") as f:
-    data = json.load(f)
-    data['Match Number']=(f.name[f.name.index('Match ')+6])
-    data['Team Number']=(f.name[f.name.index('_ ')+2:f.name.index('.json')])
-  
-  full_data = pd.DataFrame(data,index=[0])
-  full_data.to_csv(r"C:\Users\Daniel_Yang\Desktop\Test.csv", index=False)
+  for i in onlyfiles:
+    with open(join(r'D:/Downloads/testing/', i)) as f:
+      data = json.load(f)
+      data['Match Number']=(f.name[f.name.index('Match ')+6])
+      data['Team Number']=(f.name[f.name.index('_ ')+2:f.name.index('.json')])
+      try:
+        full_data = full_data.append(data,ignore_index=True)
+      except:
+        full_data = pd.DataFrame(data,index=[0])
+
+full_data.to_csv(r"C:\Users\Daniel_Yang\Desktop\MatchData.csv", index=False)
 
 
