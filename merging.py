@@ -16,37 +16,34 @@ from os.path import isfile, join
 
 
 username = os.getlogin()
-#folder=sys.argv[1]
-folder = r"D:\Downloads\testing"
-onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))] 
-
+#file=sys.argv[1]
+file = open(r"D:\Documents\JSON\PitMasterData.json")
+json_data = json.load(file)
 
 
 try:
   full_data = pd.read_csv(filepath_or_buffer=f'C:\\Users\\{username}\\Desktop\\MatchData.csv')
-  dir = join(folder, "complete")
-  if not os.path.exists(dir):
-    os.mkdir(dir)
-  for i in onlyfiles:
-    with open(join(folder, i)) as f:
-      data = json.load(f)
-      full_data = full_data.append(data,ignore_index=True)
-    shutil.move(join(folder, i),join(dir,i))
+  for i in json_data:
+    full_data = full_data.append(i,ignore_index=True)
     
   
 except FileNotFoundError:
-  dir = join(folder, "complete")
-  if not os.path.exists(dir):
-    os.mkdir(dir)
-  for i in onlyfiles:
-    with open(join(folder, i)) as f:
-      data = json.load(f)
+  for i in json_data:
       try:
-        full_data = full_data.append(data,ignore_index=True)
+        full_data = full_data.append(i,ignore_index=True)
       except:
-        full_data = pd.DataFrame(data,index=[0])
-    shutil.move(join(folder, i),join(dir,i))
+        full_data = pd.DataFrame(i,index=[0])
+
+print(full_data)
+duplicated = full_data.duplicated(keep='first')
+index=0
+for i in duplicated:
+  if i:
+    print("Hellp")
+    full_data=full_data.drop(full_data.index[index])
+    index-=1
+  index+=1
+print(full_data)
 
 full_data.to_csv(f'C:\\Users\\{username}\\Desktop\\MatchData.csv', index=False)
-
 
