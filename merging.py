@@ -30,8 +30,6 @@ try:
   for i in onlyfiles:
     with open(join(folder, i)) as f:
       data = json.load(f)
-      data['Match Number']=(f.name[f.name.index('Match ')+6])
-      data['Team Number']=(f.name[f.name.index('_ ')+2:f.name.index('.json')])
       full_data = full_data.append(data,ignore_index=True)
     shutil.move(join(folder, i),join(dir,i))
     
@@ -43,8 +41,6 @@ except FileNotFoundError:
   for i in onlyfiles:
     with open(join(folder, i)) as f:
       data = json.load(f)
-      data['Match Number']=(f.name[f.name.index('Match ')+6])
-      data['Team Number']=(f.name[f.name.index('_ ')+2:f.name.index('.json')])
       try:
         full_data = full_data.append(data,ignore_index=True)
       except:
