@@ -17,7 +17,7 @@ from os.path import isfile, join
 
 username = os.getlogin()
 #file=sys.argv[1]
-file = open(r"D:\Documents\JSON\PitMasterData.json")
+file = open(r"C:\Users\Daniel_Yang\AppData\Local\Microsoft\Windows\INetCache\IE\G2B4ZZT6\MasterData[2].json")
 json_data = json.load(file)
 
 
@@ -35,7 +35,7 @@ except FileNotFoundError:
         full_data = pd.DataFrame(i,index=[0])
 
 print(full_data)
-duplicated = full_data.duplicated(keep='first')
+duplicated = full_data.duplicated(keep='first', subset=["Team Number","Match Number"])
 index=0
 for i in duplicated:
   if i:
