@@ -16,8 +16,7 @@ from os.path import isfile, join
 
 
 username = os.getlogin()
-#file=sys.argv[1]
-file = open(r"C:\Users\Daniel_Yang\AppData\Local\Microsoft\Windows\INetCache\IE\G2B4ZZT6\MasterData[2].json")
+file = open(sys.argv[1])
 json_data = json.load(file)
 
 
@@ -32,14 +31,14 @@ except FileNotFoundError:
       try:
         full_data = full_data.append(i,ignore_index=True)
       except:
-        full_data = pd.DataFrame(i,index=[0])
+        full_data = pd.DataFrame()
+        full_data = full_data.append(i,ignore_index=True)
 
 print(full_data)
-duplicated = full_data.duplicated(keep='first', subset=["Team Number","Match Number"])
+duplicated = full_data.duplicated(keep='last', subset=["Team Number","Match Number"])
 index=0
 for i in duplicated:
   if i:
-    print("Hellp")
     full_data=full_data.drop(full_data.index[index])
     index-=1
   index+=1
