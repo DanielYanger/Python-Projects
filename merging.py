@@ -17,13 +17,13 @@ from os.path import isfile, join
 
 
 username = os.getlogin()
-file = open(r"D:\Downloads\MasterData.json")
+file = open(r"D:\Documents\MasterData.json")
 json_data = json.load(file)
 
 
-if False:
+if True:
     try:
-      full_data = pd.read_csv(filepath_or_buffer=f'C:\\Users\\{username}\\Desktop\\MatchData.csv')
+      full_data = pd.read_csv(filepath_or_buffer=fr'C:\New Folder\Match Data.csv')
       for i in json_data:
         full_data = full_data.append(i,ignore_index=True)
     
@@ -46,12 +46,12 @@ if False:
       index+=1
     print(full_data)
 
-    full_data.to_csv(f'C:\\Users\\{username}\\Desktop\\MatchData.csv', index=False)
+    full_data.to_csv(fr'C:\New Folder\Match Data.csv', index=False)
 
 
 else:
     try:
-      full_data = pd.read_csv(filepath_or_buffer=f'C:\\Users\\{username}\\Desktop\\PitData.csv')
+      full_data = pd.read_csv(filepath_or_buffer=fr'C:\Users\{username}\Desktop\PitData.csv')
       for i in json_data:
         full_data = full_data.append(i,ignore_index=True)
     
@@ -74,7 +74,7 @@ else:
       index+=1
     print(full_data)
 
-    full_data.to_csv(f'C:\\Users\\{username}\\Desktop\\PitData.csv', index=False)
+    full_data.to_csv(fr'C:\Users\{username}\Desktop\PitData.csv', index=False)
 
 
 print("yeet")
