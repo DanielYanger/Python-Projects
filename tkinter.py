@@ -1,186 +1,192 @@
-import random
-import time
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+import tkinter as tk
+from tkinter import Frame,Label,Entry,Button
+import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import random
 
-# NOTE: Python version >=3.3 is required, due to "yield from" feature.
+def swap(Array,i,j):
+      if i!=j:
+        Array[i],Array[j] = Array[j],Array[i]
 
-def swap(A, i, j):
-    """Helper function to swap elements i and j of list A."""
+def bubbleSort(Array):
+        if len(Array)==1:
+            return
+        
+        swapped=True
+        for i in range(len(Array)-1):
+            if not swapped:
+                break
+            swapped=False
+            for j in range(len(Array) - 1 - i):
+                if Array[j] > Array[j + 1]:
+                    swap(Array, j, j + 1)
+                    swapped = True
+                yield Array    
 
-    if i != j:
-        A[i], A[j] = A[j], A[i]
+def insertionSort(Array):
+        for i in range(1,len(Array)):
+            j=i
+            while j>0 and Array[j]<Array[j-1]:
+                swap(Array,j,j-1)
+                j-=1
+                yield Array    
 
-def bubblesort(A):
-    """In-place bubble sort."""
+def mergeSort(Array, start, end):
 
-    if len(A) == 1:
-        return
+        if end <= start:
+            return
 
-    swapped = True
-    for i in range(len(A) - 1):
-        if not swapped:
-            break
-        swapped = False
-        for j in range(len(A) - 1 - i):
-            if A[j] > A[j + 1]:
-                swap(A, j, j + 1)
-                swapped = True
-            yield A
+        mid = start + ((end - start + 1) // 2) - 1
+        yield from mergeSort(Array, start, mid)
+        yield from mergeSort(Array, mid + 1, end)
+        yield from merge(Array, start, mid, end)
+        yield Array    
 
-def insertionsort(A):
-    """In-place insertion sort."""
+def merge(Array, start, mid, end):
+        
+        merged = []
+        leftIdx = start
+        rightIdx = mid + 1
 
-    for i in range(1, len(A)):
-        j = i
-        while j > 0 and A[j] < A[j - 1]:
-            swap(A, j, j - 1)
-            j -= 1
-            yield A
+        while leftIdx <= mid and rightIdx <= end:
+            if Array[leftIdx] < Array[rightIdx]:
+                merged.append(Array[leftIdx])
+                leftIdx += 1
+            else:
+                merged.append(Array[rightIdx])
+                rightIdx += 1
 
-def mergesort(A, start, end):
-    """Merge sort."""
-
-    if end <= start:
-        return
-
-    mid = start + ((end - start + 1) // 2) - 1
-    yield from mergesort(A, start, mid)
-    yield from mergesort(A, mid + 1, end)
-    yield from merge(A, start, mid, end)
-    yield A
-
-def merge(A, start, mid, end):
-    """Helper function for merge sort."""
-    
-    merged = []
-    leftIdx = start
-    rightIdx = mid + 1
-
-    while leftIdx <= mid and rightIdx <= end:
-        if A[leftIdx] < A[rightIdx]:
-            merged.append(A[leftIdx])
+        while leftIdx <= mid:
+            merged.append(Array[leftIdx])
             leftIdx += 1
-        else:
-            merged.append(A[rightIdx])
+
+        while rightIdx <= end:
+            merged.append(Array[rightIdx])
             rightIdx += 1
 
-    while leftIdx <= mid:
-        merged.append(A[leftIdx])
-        leftIdx += 1
+        for i, sorted_val in enumerate(merged):
+            Array[start + i] = sorted_val
+            yield Array    
 
-    while rightIdx <= end:
-        merged.append(A[rightIdx])
-        rightIdx += 1
 
-    for i, sorted_val in enumerate(merged):
-        A[start + i] = sorted_val
-        yield A
+def quickSort(Array, start, end):
+        if(start>=end):
+            return
 
-def quicksort(A, start, end):
-    """In-place quicksort."""
+        pivot=Array[end]
+        pivotIdx = start
 
-    if start >= end:
-        return
+        for i in range(start,end):
+            if Array[i]<pivot:
+                swap(Array,i,pivotIdx)
+                pivotIdx+=1
+            yield Array
+        swap(Array, i+1,pivotIdx)
+        yield Array
 
-    pivot = A[end]
-    pivotIdx = start
+        yield from quickSort(Array,start,pivotIdx-1)
+        yield from quickSort(Array,pivotIdx+1,end)    
 
-    for i in range(start, end):
-        if A[i] < pivot:
-            swap(A, i, pivotIdx)
-            pivotIdx += 1
-        yield A
-    swap(A, end, pivotIdx)
-    yield A
+def selectionSort(Array):
+        if len(Array)==1:
+            return
+        
+        for i in range(len(Array)):
+            minVal = Array[i]
+            minIdx = i
+            for j in range(i,len(Array)):
+                if Array[j]<minVal:
+                    minVal=Array[j]
+                    minIdx=j
+                yield Array
+            swap(Array,i,minIdx)
+            yield Array    
 
-    yield from quicksort(A, start, pivotIdx - 1)
-    yield from quicksort(A, pivotIdx + 1, end)
+class Window(Frame):
 
-def selectionsort(A):
-    """In-place selection sort."""
-    if len(A) == 1:
-        return
+    
 
-    for i in range(len(A)):
-        # Find minimum unsorted value.
-        minVal = A[i]
-        minIdx = i
-        for j in range(i, len(A)):
-            if A[j] < minVal:
-                minVal = A[j]
-                minIdx = j
-            yield A
-        swap(A, i, minIdx)
-        yield A
+    def __init__(self, master = None):
+        Frame.__init__(self, master)
+        self.master = master
+        self.init_window()
 
-if __name__ == "__main__":
-    # Get user input to determine range of integers (1 to N) and desired
-    # sorting method (algorithm).
-    N = int(input("Enter number of integers: "))
-    method_msg = "Enter sorting method:\n(b)ubble\n(i)nsertion\n(m)erge \
-        \n(q)uick\n(s)election\n"
-    method = input(method_msg)
 
-    # Build and randomly shuffle list of integers.
-    A = [x + 1 for x in range(N)]
-    random.seed(time.time())
-    random.shuffle(A)
+    def Clear(self):
+        x=0
 
-    # Get appropriate generator to supply to matplotlib FuncAnimation method.
-    if method == "b":
-        title = "Bubble sort"
-        generator = bubblesort(A)
-    elif method == "i":
-        title = "Insertion sort"
-        generator = insertionsort(A)
-    elif method == "m":
-        title = "Merge sort"
-        generator = mergesort(A, 0, N - 1)
-    elif method == "q":
-        title = "Quicksort"
-        generator = quicksort(A, 0, N - 1)
-    else:
-        title = "Selection sort"
-        generator = selectionsort(A)
+#    def Plot(self):
+#        x=0
 
-    # Initialize figure and axis.
-    fig, ax = plt.subplots()
-    ax.set_title(title)
 
-    # Initialize a bar plot. Note that matplotlib.pyplot.bar() returns a
-    # list of rectangles (with each bar in the bar plot corresponding
-    # to one rectangle), which we store in bar_rects.
-    bar_rects = ax.bar(range(len(A)), A, align="edge")
+    def init_window(self):
 
-    # Set axis limits. Set y axis upper limit high enough that the tops of
-    # the bars won't overlap with the text label.
-    ax.set_xlim(0, N)
-    ax.set_ylim(0, int(1.07 * N))
 
-    # Place a text label in the upper-left corner of the plot to display
-    # number of operations performed by the sorting algorithm (each "yield"
-    # is treated as 1 operation).
-    text = ax.text(0.02, 0.95, "", transform=ax.transAxes)
+        def animate(i):
+           self.line.set_ydata(np.sin(self.x+i/10.0))  # update the data
+           return self.line,
 
-    # Define function update_fig() for use with matplotlib.pyplot.FuncAnimation().
-    # To track the number of operations, i.e., iterations through which the
-    # animation has gone, define a variable "iteration". This variable will
-    # be passed to update_fig() to update the text label, and will also be
-    # incremented in update_fig(). For this increment to be reflected outside
-    # the function, we make "iteration" a list of 1 element, since lists (and
-    # other mutable objects) are passed by reference (but an integer would be
-    # passed by value).
-    # NOTE: Alternatively, iteration could be re-declared within update_fig()
-    # with the "global" keyword (or "nonlocal" keyword).
-    iteration = [0]
-    def update_fig(A, rects, iteration):
-        for rect, val in zip(rects, A):
-            rect.set_height(val)
-        iteration[0] += 1
-        text.set_text("# of operations: {}".format(iteration[0]))
+        iteration = [0]
 
-    anim = animation.FuncAnimation(fig, func=update_fig,
-        fargs=(bar_rects, iteration), frames=generator, interval=1,
-        repeat=False)
-    plt.show()
+        def update_fig(Array, rects, iteration):
+          for rect, val in zip(rects, Array):
+              rect.set_height(val)
+          iteration[0] += 1
+          text.set_text("# of operations: {}".format(iteration[0]))
+        self.master.title("Use Of FuncAnimation in tkinter based GUI")
+        self.pack(fill='both', expand=1)     
+
+#Create the controls, note use of grid
+
+        self.labelSpeed = Label(self,text="Speed (km/Hr)",width=12)
+        self.labelSpeed.grid(row=0,column=1)
+        self.labelAmplitude = Label(self,text="Amplitude",width=12)
+        self.labelAmplitude.grid(row=0,column=2)
+
+        self.textSpeed = Entry(self,width=12)
+        self.textSpeed.grid(row=1,column=1)
+        self.textSpeed.insert(index=0,string='10')
+        self.textAmplitude = Entry(self,width=12)
+        self.textAmplitude.grid(row=1,column=2)
+
+
+#        self.buttonPlot = Button(self,text="Plot",command=self.Plot,width=12)
+        self.buttonPlot = Button(self,text="Plot",width=12, command=self.Clear)
+        self.buttonPlot.grid(row=2,column=1)
+        
+        self.buttonClear = Button(self,text="Clear",command=self.Clear,width=12)
+        self.buttonClear.grid(row=2,column=2)
+
+#        self.buttonClear.bind(lambda e:self.Plot)
+        self.buttonClear.bind(lambda e:self.Clear)
+
+
+        N=(int(self.textSpeed.get()));
+        tk.Label(self,text="SHM Simulation").grid(column=0, row=3)
+        Array = [x+1 for x in range(N)]
+        random.shuffle(Array)
+        self.fig, self.ax = plt.subplots()
+        self.ax.set_title("Bubble Sort")
+        bar_rect=self.ax.bar(range(len(Array)),Array,align="edge")
+        self.ax.set_xlim(0, N)
+        self.ax.set_ylim(0, int(1.07 * N))
+        text = self.ax.text(0.02, 0.95, "", transform=self.ax.transAxes)
+          
+
+
+        self.canvas = FigureCanvasTkAgg(self.fig, master=self)
+        self.canvas.get_tk_widget().grid(column=0,row=4)
+  
+        self.ani = animation.FuncAnimation(self.fig,update_fig,fargs=(bar_rect, iteration),frames=bubbleSort(Array),interval=1,repeat=False)
+
+    
+   
+
+
+root = tk.Tk()
+root.geometry("1800x700")
+app = Window(root)
+tk.mainloop()
