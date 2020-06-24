@@ -150,6 +150,22 @@ def selectionSort(Array):
             swap(Array,i,minIdx)
             yield Array    
 
+
+def gnomeSort(Array):
+    if len(Array)==1:
+        return
+    i=1
+    while i<len(Array):
+        if (i==0):
+            i+=1
+        if (Array[i] >= Array[i-1]):
+            i+=1
+        elif(Array[i]<Array[i-1]):
+            swap(Array,i,i-1)
+            i-=1
+        yield Array
+
+
 iteration = [0]
 
 def update_fig(Array, rects, iteration, text):
@@ -219,6 +235,9 @@ def vp_start_gui(N,sort_type):
     elif method=='eo':
         title="Even Odd Sort"
         generator = brickSort(Array)
+    elif method=='g':
+        title="Gnome Sort"
+        generator = gnomeSort(Array)
     else:
         title = "Selection sort"
         generator = selectionSort(Array)
@@ -227,9 +246,9 @@ def vp_start_gui(N,sort_type):
 
     app.fig, app.ax = plt.subplots()
     app.ax.set_title(title)
-    #bar_rect=app.ax.bar(range(len(Array)),Array,align="edge")
-    bar_rect = app.ax.scatter(range(len(Array)),Array, linestyle="-")
-    plt.plot(range(len(Array)),Array)
+    bar_rect=app.ax.bar(range(len(Array)),Array,align="edge")
+    #bar_rect = app.ax.scatter(range(len(Array)),Array, linestyle="-")
+    #plt.plot(range(len(Array)),Array)
     app.ax.set_xlim(0, N)
     app.ax.set_ylim(0, int(1.07 * N))
     text = app.ax.text(0.02, 0.95, "", transform=app.ax.transAxes)
@@ -240,15 +259,17 @@ def vp_start_gui(N,sort_type):
         iteration[0] += 1
         text.set_text("# of operations: {}".format(iteration[0]))
     
-    def update_figure(Array):
+    def update_figure(Array,iteration):
         app.ax.clear()
         app.ax.scatter(range(len(Array)),Array, linestyle="-")
         plt.plot(range(len(Array)),Array)
+        iteration[0] += 1
+        text.set_text("# of operations: {}".format(iteration[0]))
 
 
     app.canvas = FigureCanvasTkAgg(app.fig, master=app)
     app.canvas.get_tk_widget().grid(column=0,row=6)
-    app.ani = animation.FuncAnimation(app.fig,update_figure,fargs=(),frames=generator,interval=1,repeat=False,cache_frame_data=False)
+    app.ani = animation.FuncAnimation(app.fig,update_fig,fargs=(bar_rect,iteration),frames=generator,interval=1,repeat=False,cache_frame_data=False)
     root.mainloop()    
 
 
