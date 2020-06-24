@@ -11,6 +11,31 @@ def swap(Array,i,j):
       if i!=j:
         Array[i],Array[j] = Array[j],Array[i]
 
+def cocktailSort(Array):
+    if len(Array)==1:
+        return
+    
+    swapped = True
+    for i in range(len(Array)-1):
+        if not swapped:
+            break
+        swapped=False
+        for j in range(len(Array) - 1 - i):
+            if Array[j] > Array[j + 1]:
+                swap(Array, j, j + 1)
+                swapped = True
+            yield Array
+        if not swapped:
+            break
+        swapped=False
+        for j in range(len(Array)-1-i,i,-1):
+            if Array[j]<Array[j-1]:
+                swap(Array,j,j-1)
+                swapped=True
+            yield Array
+
+        
+
 def bubbleSort(Array):
         if len(Array)==1:
             return
@@ -167,6 +192,9 @@ def vp_start_gui(N,sort_type):
     elif method == "q":
         title = "Quicksort"
         generator = quickSort(Array, 0, N - 1)
+    elif method == 'c':
+        title = "Cocktail Shaker"
+        generator = cocktailSort(Array)
     else:
         title = "Selection sort"
         generator = selectionSort(Array)
