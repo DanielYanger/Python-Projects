@@ -227,7 +227,9 @@ def vp_start_gui(N,sort_type):
 
     app.fig, app.ax = plt.subplots()
     app.ax.set_title(title)
-    bar_rect=app.ax.bar(range(len(Array)),Array,align="edge")
+    #bar_rect=app.ax.bar(range(len(Array)),Array,align="edge")
+    bar_rect = app.ax.scatter(range(len(Array)),Array, linestyle="-")
+    plt.plot(range(len(Array)),Array)
     app.ax.set_xlim(0, N)
     app.ax.set_ylim(0, int(1.07 * N))
     text = app.ax.text(0.02, 0.95, "", transform=app.ax.transAxes)
@@ -237,10 +239,16 @@ def vp_start_gui(N,sort_type):
             rect.set_height(val)
         iteration[0] += 1
         text.set_text("# of operations: {}".format(iteration[0]))
+    
+    def update_figure(Array):
+        app.ax.clear()
+        app.ax.scatter(range(len(Array)),Array, linestyle="-")
+        plt.plot(range(len(Array)),Array)
+
 
     app.canvas = FigureCanvasTkAgg(app.fig, master=app)
     app.canvas.get_tk_widget().grid(column=0,row=6)
-    app.ani = animation.FuncAnimation(app.fig,update_fig,fargs=(bar_rect, iteration),frames=generator,interval=1,repeat=False,cache_frame_data=False)
+    app.ani = animation.FuncAnimation(app.fig,update_figure,fargs=(),frames=generator,interval=1,repeat=False,cache_frame_data=False)
     root.mainloop()    
 
 
