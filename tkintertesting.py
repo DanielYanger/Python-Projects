@@ -125,10 +125,6 @@ class Window(Frame):
     def init_window(self):
 
 
-        def animate(i):
-           self.line.set_ydata(np.sin(self.x+i/10.0))  # update the data
-           return self.line,
-
         iteration = [0]
 
         def update_fig(Array, rects, iteration):
@@ -154,7 +150,7 @@ class Window(Frame):
 
 
 #        self.buttonPlot = Button(self,text="Plot",command=self.Plot,width=12)
-        self.buttonPlot = Button(self,text="Plot",width=12, command=self.Clear)
+        self.buttonPlot = Button(self,text="Plot",width=12)
         self.buttonPlot.grid(row=2,column=1)
         
         self.buttonClear = Button(self,text="Clear",command=self.Clear,width=12)
@@ -164,7 +160,7 @@ class Window(Frame):
         self.buttonClear.bind(lambda e:self.Clear)
 
 
-        N=(int(self.textSpeed.get()));
+        N=(int(self.textSpeed.get()))
         tk.Label(self,text="SHM Simulation").grid(column=0, row=3)
         Array = [x+1 for x in range(N)]
         random.shuffle(Array)
@@ -187,6 +183,6 @@ class Window(Frame):
 
 
 root = tk.Tk()
-root.geometry("1800x700")
+root.geometry("1500x700")
 app = Window(root)
 tk.mainloop()
