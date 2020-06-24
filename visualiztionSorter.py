@@ -34,6 +34,27 @@ def cocktailSort(Array):
                 swapped=True
             yield Array
 
+def brickSort(Array):
+    if len(Array)==1:
+        return
+
+    swapped = True
+
+    while ( swapped):
+        swapped = False
+        for j in range(0,len(Array)-1,2):
+            if Array[j] > Array[j + 1]:
+                swap(Array, j, j + 1)
+                swapped = True
+            yield Array
+        for j in range(1,len(Array)-1,2):
+            if Array[j] > Array[j + 1]:
+                swap(Array, j, j + 1)
+                swapped = True
+            yield Array
+
+
+            
         
 
 def bubbleSort(Array):
@@ -195,6 +216,9 @@ def vp_start_gui(N,sort_type):
     elif method == 'c':
         title = "Cocktail Shaker"
         generator = cocktailSort(Array)
+    elif method=='eo':
+        title="Even Odd Sort"
+        generator = brickSort(Array)
     else:
         title = "Selection sort"
         generator = selectionSort(Array)
